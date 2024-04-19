@@ -3,9 +3,13 @@
 A simple comment plugin written in lua for Neovim.
 
 ## Installation
-If you are using _packer_
+__packer__
 ```lua
  use("TelurijevDioksid/nvim-commenter")
+```
+__vim-plug__
+```vim
+Plug 'TelurijevDioksid/nvim-commenter'
 ```
 
 ## Usage
