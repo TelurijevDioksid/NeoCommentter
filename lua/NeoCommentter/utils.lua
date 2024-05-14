@@ -1,5 +1,5 @@
 local M = {}
-local langs = require("nvim-commenter.langs")
+local langs = require("NeoCommentter.langs")
 
 function M.insert_char_before(str)
     local res = ""

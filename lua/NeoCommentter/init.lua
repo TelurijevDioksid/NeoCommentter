@@ -1,6 +1,6 @@
 local M = {}
-local utils = require("nvim-commenter.utils")
-local langs = require("nvim-commenter.langs")
+local utils = require("NeoCommentter.utils")
+local langs = require("NeoCommentter.langs")
 
 function M.setup(props)
     if props then
