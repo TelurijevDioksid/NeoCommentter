@@ -43,7 +43,7 @@ require("NeoCommentter").setup({
 
 If language based on file extension is not supported, plugin will use default comment which is `//`.
 
-Creating custom mappings example:
+### Creating custom mappings example:
 
 ```lua
 vim.keymap.set("v", "<C-k>", require("nvim-commenter").toggle_comment)
