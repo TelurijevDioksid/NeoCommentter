@@ -36,10 +36,7 @@ function M.uncomment_lines(start_idx, end_idx, lines, info)
         local end_match = string.match(line, "%s*" .. M.insert_char_before(info[2]) .. "$s*$")
         local pos = nil
         if start_match then
-            print("start_match", start_match)
-            print("line", line)
             _, pos = string.find(line, start_match, 1, true)
-            print("pos", pos)
             line = string.sub(line, pos + 1)
         end
         if end_match then
@@ -77,11 +74,14 @@ end
 
 function M.get_f_buff_lang()
     local extension = vim.api.nvim_buf_get_name(0):match("^.+(%..+)$"):gsub("^%.", "", 1)
-    local info = {
-        langs.languages[extension].first_comment,
-        langs.languages[extension].last_comment
-    }
-    if not info then
+    local info = langs.languages[extension]
+    if info then
+        info = {
+            langs.languages[extension].first_comment,
+            langs.languages[extension].last_comment
+        }
+    else
+        print("Unknown file type, defaulting to //")
         info = { "//", "" }
     end
     return info
