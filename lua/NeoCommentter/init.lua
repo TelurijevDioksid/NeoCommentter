@@ -15,7 +15,7 @@ function M.toggle_comment()
     local commented = false
 
     for _, line in ipairs(lines) do
-        local start_match = string.match(line, "^%s*" .. utils.insert_char_before(info[1]) .. " ")
+        local start_match = string.match(line, "^%s*" .. utils.escape_seq(info[1]) .. " ")
         if start_match then
             commented = true
             break

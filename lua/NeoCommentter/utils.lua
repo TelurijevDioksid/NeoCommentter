@@ -1,7 +1,7 @@
 local M = {}
 local langs = require("NeoCommentter.langs")
 
-function M.insert_char_before(str)
+function M.escape_seq(str)
     local res = ""
     for i = 1, #str do
         res = res .. "%" .. str:sub(i, i)
@@ -32,8 +32,16 @@ function M.uncomment_lines(start_idx, end_idx, lines, info)
 
     for _, line in ipairs(lines) do
         local start_whitespace = string.match(line, "^%s*")
-        local start_match = string.match(line, "^%s*" .. M.insert_char_before(info[1]) .. "%s*")
-        local end_match = string.match(line, "%s*" .. M.insert_char_before(info[2]) .. "$s*$")
+        local start_match = nil
+        local end_match = nil
+
+        if info[1] ~= "" then
+            start_match = string.match(line, "^%s*" .. M.escape_seq(info[1]) .. "%s*")
+        end
+        if info[2] ~= "" then
+            end_match = string.match(line, "%s*" .. M.escape_seq(info[2]) .. "%s*$")
+        end
+
         local pos = nil
         if start_match then
             _, pos = string.find(line, start_match, 1, true)
@@ -43,6 +51,7 @@ function M.uncomment_lines(start_idx, end_idx, lines, info)
             pos, _ = string.find(line, end_match, 1, true)
             line = string.sub(line, 1, pos - 1)
         end
+
         line = start_whitespace .. line
         table.insert(new_lines, line)
     end
