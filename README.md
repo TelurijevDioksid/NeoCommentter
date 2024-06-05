@@ -52,4 +52,4 @@ vim.keymap.set("n", "<C-k>", require("nvim-commenter").toggle_comment)
 
 ## Supported languages
 
-C, Python, Lua, C++, JavaScript, TypeScript, HTML, CSS, Bash, Go, Rust
+C, Lua, C++, JavaScript, TypeScript, HTML, CSS, Bash, Go, Rust, Python
