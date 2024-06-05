@@ -46,8 +46,8 @@ If language based on file extension is not supported, plugin will use default co
 ### Creating custom mappings example:
 
 ```lua
-vim.keymap.set("v", "<C-k>", require("nvim-commenter").toggle_comment)
-vim.keymap.set("n", "<C-k>", require("nvim-commenter").toggle_comment)
+vim.keymap.set("v", "<leader>cc", require("nvim-commenter").toggle_comment)
+vim.keymap.set("n", "<leader>cc", require("nvim-commenter").toggle_comment)
 ```
 
 ## Supported languages
