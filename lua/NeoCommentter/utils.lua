@@ -3,7 +3,7 @@ local langs = require("NeoCommentter.langs")
 local function get_selection()
     local start_idx, end_idx = 0, 0
     local mode = vim.api.nvim_get_mode().mode
-    print("mode: ", mode)
+
     if mode == "n" then
         end_idx = vim.api.nvim_win_get_cursor(0)[1]
         start_idx = end_idx - 1
@@ -15,7 +15,6 @@ local function get_selection()
         else
             start_idx = start_idx - 1
         end
-        print("start_idx, end_idx: ", start_idx, end_idx)
     end
     return start_idx, end_idx
 end
