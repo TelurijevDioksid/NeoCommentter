@@ -1,46 +1,59 @@
-local M = {}
 local utils = require("NeoCommentter.utils")
 local langs = require("NeoCommentter.langs")
 
-function M.setup(props)
-    if props then
-        langs.add_langs(props)
+local function setup(props)
+    if io.open(langs.json_filename, "r") == nil then
+        local file = io.open(langs.json_filename, "w")
+        file:write("{}")
+        file:close()
+    end
+    if props["langs"] then
+        langs.add_langs(props["langs"])
     end
 end
 
-function M.toggle_comment()
-    local start_num, end_num = utils.find_line_pos()
-    local lines = vim.api.nvim_buf_get_lines(0, start_num, end_num, false)
-    local info = utils.get_f_buff_lang()
-    local commented = false
-
-    for _, line in ipairs(lines) do
-        local start_match = string.match(line, "^%s*" .. utils.escape_seq(info[1]) .. " ")
-        if start_match then
-            commented = true
-            break
-        end
+local function toggle_comment()
+    local start_idx, end_idx = utils.get_selection()
+    local lines = vim.api.nvim_buf_get_lines(0, start_idx, end_idx, false)
+    local info = langs.get_lang_info()
+    if not info then
+        error("Cannot find comment for this language. Check your setup.")
     end
-
-    if commented then
-        utils.uncomment_lines(start_num, end_num, lines, info)
+    local new_lines = {}
+    if utils.has_comment(lines, info.begin) then
+        new_lines = utils.remove_comment(info.begin, info.last, lines)
     else
-        utils.comment_lines(start_num, end_num, lines, info)
+        new_lines = utils.add_comment(info.begin, info.last, lines)
     end
+    vim.api.nvim_buf_set_lines(0, start_idx, end_idx, false, new_lines)
 end
 
-function M.uncomment()
-    local start_num, end_num = utils.find_line_pos()
-    local lines = vim.api.nvim_buf_get_lines(0, start_num, end_num, false)
-    local info = utils.get_f_buff_lang()
-    utils.uncomment_lines(start_num, end_num, lines, info)
+local function uncomment()
+    local start_idx, end_idx = utils.get_selection()
+    local lines = vim.api.nvim_buf_get_lines(0, start_idx, end_idx, false)
+    local info = langs.get_lang_info()
+    if not info then
+        error("Cannot find comment for this language. Check your setup.")
+    end
+    local new_lines = utils.remove_comment(info.begin, info.last, lines)
+    vim.api.nvim_buf_set_lines(0, start_idx, end_idx, false, new_lines)
 end
 
-function M.comment()
-    local start_num, end_num = utils.find_line_pos()
-    local info = utils.get_f_buff_lang()
-    local lines = vim.api.nvim_buf_get_lines(0, start_num, end_num, false)
-    utils.comment_lines(start_num, end_num, lines, info)
+local function comment()
+    local start_idx, end_idx = utils.get_selection()
+    local lines = vim.api.nvim_buf_get_lines(0, start_idx, end_idx, false)
+    local info = langs.get_lang_info()
+    if not info then
+        error("Cannot find comment for this language. Check your setup.")
+    end
+    local new_lines = utils.add_comment(info.begin, info.last, lines)
+    vim.api.nvim_buf_set_lines(0, start_idx, end_idx, false, new_lines)
 end
 
-return M
+return {
+    setup = setup,
+    uncomment = uncomment,
+    comment = comment,
+    toggle_comment = toggle_comment,
+}
+

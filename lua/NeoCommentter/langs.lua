@@ -1,60 +1,39 @@
-local M = {}
+local json_filename = vim.fn.stdpath("data") .. "/neocommentter_langs.json"
 
-M.languages = {
-    ["py"] = {
-        first_comment = "#",
-        last_comment = ""
-    },
-    ["lua"] = {
-        first_comment = "--",
-        last_comment = ""
-    },
-    ["c"] = {
-        first_comment = "//",
-        last_comment = ""
-    },
-    ["cpp"] = {
-        first_comment = "//",
-        last_comment = ""
-    },
-    ["cc"] = {
-        first_comment = "//",
-        last_comment = ""
-    },
-    ["js"] = {
-        first_comment = "//",
-        last_comment = ""
-    },
-    ["ts"] = {
-        first_comment = "//",
-        last_comment = ""
-    },
-    ["html"] = {
-        first_comment = "<!--",
-        last_comment = "-->"
-    },
-    ["css"] = {
-        first_comment = "/*",
-        last_comment = "*/"
-    },
-    ["sh"] = {
-        first_comment = "#",
-        last_comment = ""
-    },
-    ["go"] = {
-        first_comment = "//",
-        last_comment = ""
-    },
-    ["rs"] = {
-        first_comment = "//",
-        last_comment = ""
-    }
-}
+local function get_lang_info()
+    local extension = vim.api.nvim_buf_get_name(0):match("^.+(%..+)$"):gsub("^%.", "", 1)
+    local file = io.open(json_filename, "r")
+    local langs = vim.fn.json_decode(file:read("*a"))
+    file:close()
+    local lang_info = nil
 
-function M.add_langs(langs)
-    for l_name, l_info in pairs(langs) do
-        M.languages[l_name] = l_info
+    for lang, info in pairs(langs) do
+        if lang == extension then
+            lang_info = info
+            break
+        end
     end
+
+    return lang_info
 end
 
-return M
+local function add_langs(prop_langs)
+    local file = io.open(json_filename, "r")
+    local data = vim.fn.json_decode(file:read("*a"))
+    file:close()
+
+    for lang, info in pairs(prop_langs) do
+        data[lang] = info
+    end
+
+    file = io.open(json_filename, "w")
+    file:write(vim.fn.json_encode(data))
+    file:close()
+end
+
+return {
+    json_filename = json_filename,
+    get_lang_info = get_lang_info,
+    add_langs = add_langs
+}
+
