@@ -50,6 +50,3 @@ vim.keymap.set("v", "<leader>cc", require("nvim-commenter").toggle_comment)
 vim.keymap.set("n", "<leader>cc", require("nvim-commenter").toggle_comment)
 ```
 
-## Supported languages
-
-C, Lua, C++, JavaScript, TypeScript, HTML, CSS, Bash, Go, Rust, Python
