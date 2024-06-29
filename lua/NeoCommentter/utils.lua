@@ -17,11 +17,11 @@ local function get_selection()
     return start_idx, end_idx
 end
 
-local function escape_seq(str)
+local function escape_seq(str_sequence)
     local res = ""
 
-    for i = 1, #str do
-        res = res .. "%" .. str:sub(i, i)
+    for i = 1, #str_sequence do
+        res = res .. "%" .. str_sequence:sub(i, i)
     end
 
     return res
