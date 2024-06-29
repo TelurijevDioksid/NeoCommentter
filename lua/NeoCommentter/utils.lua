@@ -1,5 +1,3 @@
-local langs = require("NeoCommentter.langs")
-
 local function get_selection()
     local start_idx, end_idx = 0, 0
     local mode = vim.api.nvim_get_mode().mode
@@ -12,18 +10,20 @@ local function get_selection()
         end_idx = vim.fn.getpos(".")[2]
         if start_idx > end_idx then
             start_idx, end_idx = end_idx, start_idx
-        else
-            start_idx = start_idx - 1
         end
+        start_idx = start_idx - 1
     end
+
     return start_idx, end_idx
 end
 
 local function escape_seq(str)
     local res = ""
+
     for i = 1, #str do
         res = res .. "%" .. str:sub(i, i)
     end
+
     return res
 end
 
@@ -78,14 +78,15 @@ local function remove_comment(first_comment, last_comment, lines)
 end
 
 local function has_comment(lines, first_comment)
-    local has = false
+    local present = false
     for _, line in ipairs(lines) do
         if string.match(line, "^%s*" .. escape_seq(first_comment) .. " ") then
-            has = true
+            present = true
             break
         end
     end
-    return has
+
+    return present
 end
 
 return {
